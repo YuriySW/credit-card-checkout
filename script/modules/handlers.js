@@ -1,19 +1,6 @@
 import {cardName, cardNumber, cardDate} from './card.js';
-
-// export function handleNameInput(event) {
-//   const value = event.target.value;
-//   const words = value.split(' ');
-//   const trimmedWords = words.map((word) => word.slice(0, 20));
-//   const limitedWords = trimmedWords.slice(0, 2);
-//   const limitedValue = limitedWords.join(' ');
-
-//   if (/^[a-zA-Z\s]*$/.test(limitedValue)) {
-//     cardName.textContent = limitedValue || 'John Doe';
-//     event.target.value = limitedValue;
-//   } else {
-//     event.target.value = limitedValue;
-//   }
-// }
+import {validateForm} from './validation.js';
+import {validationMessage} from './createElement.js';
 
 export function handleNameInput(event) {
   const value = event.target.value;
@@ -22,7 +9,6 @@ export function handleNameInput(event) {
   const trimmedWords = words.map((word) => word.slice(0, 20));
   const limitedWords = trimmedWords.slice(0, 2);
   const limitedValue = limitedWords.join(' ');
-
   cardName.textContent = limitedValue || 'John Doe';
   event.target.value = limitedValue;
 }
@@ -47,4 +33,38 @@ export function handleDateInput(event) {
 export function handleCvvInput(event) {
   const value = event.target.value.replace(/\D/g, '');
   event.target.value = value.slice(0, 3);
+}
+
+export function handleFormSubmit(event) {
+  event.preventDefault();
+
+  // Получаем значения полей
+  const cardHolderInput = document.getElementById('cardHolder');
+  const cardNumberInput = document.getElementById('cardNumber');
+  const cardDateInput = document.getElementById('cardDate');
+  const cvvInput = document.getElementById('cvv');
+
+  const cardHolderValue = cardHolderInput.value;
+  const cardNumberValue = cardNumberInput.value;
+  const cardDateValue = cardDateInput.value;
+  const cvvValue = cvvInput.value;
+
+  // Валидация
+  const validation = validateForm(cardHolderValue, cardNumberValue, cardDateValue, cvvValue);
+
+  // Показываем сообщение
+  if (validation.isValid()) {
+    validationMessage.textContent = 'Данные валидны ✓';
+    validationMessage.style.color = '#4CAF50';
+  } else {
+    validationMessage.textContent = 'Данные не валидны ✗';
+    validationMessage.style.color = '#f44336';
+  }
+
+  validationMessage.style.display = 'block';
+
+  // Скрываем сообщение через 2 секунды
+  setTimeout(() => {
+    validationMessage.style.display = 'none';
+  }, 2000);
 }
