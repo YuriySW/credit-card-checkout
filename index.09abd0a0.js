@@ -1168,6 +1168,7 @@ exports.export = function(dest, destName, get) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "createInputField", ()=>createInputField);
+parcelHelpers.export(exports, "validationMessage", ()=>validationMessage);
 parcelHelpers.export(exports, "form", ()=>form);
 var _redom = require("redom");
 var _handlersJs = require("./handlers.js");
@@ -1181,90 +1182,49 @@ function createInputField({ type = 'text', id = '', className = '', placeholder 
         oninput: onInput
     });
 }
-const form = (0, _redom.el)('form.form#form', (0, _redom.el)('div.form__input-wrap.form__input-wrap_holder', (0, _redom.el)('label.form__label.form__holder-label', 'Card Holder'), createInputField({
+const validationMessage = (0, _redom.el)('h2.validation-message', {
+    style: 'display: none; margin-top: 20px; text-align: center;'
+});
+const form = (0, _redom.el)('form.form#form', {
+    onsubmit: (0, _handlersJs.handleFormSubmit)
+}, (0, _redom.el)('div.form__input-wrap.form__input-wrap_holder', (0, _redom.el)('label.form__label.form__holder-label', 'Card Holder'), createInputField({
+    id: 'cardHolder',
     className: 'input input__holder',
     placeholder: 'Enter card holder name',
     onInput: (0, _handlersJs.handleNameInput)
 })), (0, _redom.el)('div.form__input-wrap.form__input-wrap_number', (0, _redom.el)('label.form__label.form__number-label', 'Card Number'), createInputField({
+    id: 'cardNumber',
     className: 'input input__number',
     placeholder: 'xxxx xxxx xxxx xxxx',
     maxLength: 19,
     onInput: (0, _handlersJs.handleCardNumberInput)
 })), (0, _redom.el)('div.form__input-wrap.form__input-wrap_date', (0, _redom.el)('label.form__label.form__date-label', 'Card Expiry'), createInputField({
+    id: 'cardDate',
     className: 'input input__date',
     placeholder: 'MM/YY',
     maxLength: 5,
     onInput: (0, _handlersJs.handleDateInput)
 })), (0, _redom.el)('div.form__input-wrap.form__input-wrap_cvv', (0, _redom.el)('label.form__label.form__cvv-label', 'CVV'), createInputField({
+    id: 'cvv',
     className: 'input input__cvv',
     placeholder: '***',
     maxLength: 3,
     onInput: (0, _handlersJs.handleCvvInput)
-})), (0, _redom.el)('button.form__button', 'CHECK OUT')); // export const form = el(
- //   'form.form#form',
- //   el(
- //     'div.form__input-wrap.form__input-wrap_holder',
- //     el('label.form__label.form__holder-label', 'Card Holder'),
- //     el('input.input.input__holder', {
- //       type: 'text',
- //       placeholder: 'Enter card holder name',
- //       oninput: handleNameInput,
- //     })
- //   ),
- //   el(
- //     'div.form__input-wrap.form__input-wrap_number',
- //     el('label.form__label.form__number-label', 'Card Number'),
- //     el('input.input.input__number#cardNumber', {
- //       type: 'text',
- //       placeholder: 'xxxx xxxx xxxx xxxx',
- //       maxlength: 19,
- //       oninput: handleCardNumberInput,
- //     })
- //   ),
- //   el(
- //     'div.form__input-wrap.form__input-wrap_date',
- //     el('label.form__label.form__date-label', 'Card Expiry'),
- //     el('input.input.input__date', {
- //       type: 'text',
- //       placeholder: 'MM/YY',
- //       maxlength: 5,
- //       oninput: handleDateInput,
- //     })
- //   ),
- //   el(
- //     'div.form__input-wrap.form__input-wrap_cvv',
- //     el('label.form__label.form__cvv-label', 'CVV'),
- //     el('input.input.input__cvv', {
- //       type: 'text',
- //       placeholder: '***',
- //       maxlength: 3,
- //       oninput: handleCvvInput,
- //     })
- //   ),
- //   el('button.form__button', 'CHECK OUT')
- // );
+})), (0, _redom.el)('button.form__button', {
+    type: 'submit'
+}, "\u041E\u0422\u041F\u0420\u0410\u0412\u0418\u0422\u042C"), validationMessage);
 
 },{"redom":"cWIuY","./handlers.js":"4qy9P","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4qy9P":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-// export function handleNameInput(event) {
-//   const value = event.target.value;
-//   const words = value.split(' ');
-//   const trimmedWords = words.map((word) => word.slice(0, 20));
-//   const limitedWords = trimmedWords.slice(0, 2);
-//   const limitedValue = limitedWords.join(' ');
-//   if (/^[a-zA-Z\s]*$/.test(limitedValue)) {
-//     cardName.textContent = limitedValue || 'John Doe';
-//     event.target.value = limitedValue;
-//   } else {
-//     event.target.value = limitedValue;
-//   }
-// }
 parcelHelpers.export(exports, "handleNameInput", ()=>handleNameInput);
 parcelHelpers.export(exports, "handleCardNumberInput", ()=>handleCardNumberInput);
 parcelHelpers.export(exports, "handleDateInput", ()=>handleDateInput);
 parcelHelpers.export(exports, "handleCvvInput", ()=>handleCvvInput);
+parcelHelpers.export(exports, "handleFormSubmit", ()=>handleFormSubmit);
 var _cardJs = require("./card.js");
+var _validationJs = require("./validation.js");
+var _createElementJs = require("./createElement.js");
 function handleNameInput(event) {
     const value = event.target.value;
     const sanitizedValue = value.replace(/[^a-zA-Z\s]/g, '');
@@ -1292,7 +1252,108 @@ function handleCvvInput(event) {
     const value = event.target.value.replace(/\D/g, '');
     event.target.value = value.slice(0, 3);
 }
+function handleFormSubmit(event) {
+    event.preventDefault();
+    // Получаем значения полей
+    const cardHolderInput = document.getElementById('cardHolder');
+    const cardNumberInput = document.getElementById('cardNumber');
+    const cardDateInput = document.getElementById('cardDate');
+    const cvvInput = document.getElementById('cvv');
+    const cardHolderValue = cardHolderInput.value;
+    const cardNumberValue = cardNumberInput.value;
+    const cardDateValue = cardDateInput.value;
+    const cvvValue = cvvInput.value;
+    // Валидация
+    const validation = (0, _validationJs.validateForm)(cardHolderValue, cardNumberValue, cardDateValue, cvvValue);
+    // Показываем сообщение
+    if (validation.isValid()) {
+        (0, _createElementJs.validationMessage).textContent = "\u0414\u0430\u043D\u043D\u044B\u0435 \u0432\u0430\u043B\u0438\u0434\u043D\u044B \u2713";
+        (0, _createElementJs.validationMessage).style.color = '#4CAF50';
+    } else {
+        (0, _createElementJs.validationMessage).textContent = "\u0414\u0430\u043D\u043D\u044B\u0435 \u043D\u0435 \u0432\u0430\u043B\u0438\u0434\u043D\u044B \u2717";
+        (0, _createElementJs.validationMessage).style.color = '#f44336';
+    }
+    (0, _createElementJs.validationMessage).style.display = 'block';
+    // Скрываем сообщение через 2 секунды
+    setTimeout(()=>{
+        (0, _createElementJs.validationMessage).style.display = 'none';
+    }, 2000);
+}
 
-},{"./card.js":"5UD9c","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fovxO","83FZ8"], "83FZ8", "parcelRequire94c2")
+},{"./card.js":"5UD9c","./validation.js":"6adMy","./createElement.js":"5m3yY","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6adMy":[function(require,module,exports,__globalThis) {
+// validation.js
+/**
+ * Валидация Card Holder
+ * Пропускает строку с двумя словами, разделенными пробелами,
+ * состоящую только из латинских букв
+ */ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "validateCardHolder", ()=>validateCardHolder);
+/**
+ * Валидация Card Number
+ * Пропускает только строку из цифр (с пробелами или без)
+ * Длина должна быть от 13 до 16 цифр
+ */ parcelHelpers.export(exports, "validateCardNumber", ()=>validateCardNumber);
+/**
+ * Валидация CVV/CVC
+ * Пропускает строку ровно из 3 цифровых символов
+ */ parcelHelpers.export(exports, "validateCVV", ()=>validateCVV);
+/**
+ * Валидация даты карты (MM/YY)
+ */ parcelHelpers.export(exports, "validateCardDate", ()=>validateCardDate);
+/**
+ * Общая валидация всех полей формы
+ */ parcelHelpers.export(exports, "validateForm", ()=>validateForm);
+function validateCardHolder(value) {
+    if (!value || typeof value !== 'string') return false;
+    const trimmedValue = value.trim();
+    // Проверка на наличие цифр
+    if (/\d/.test(trimmedValue)) return false;
+    // Проверка на кириллицу
+    if (/[а-яА-ЯёЁ]/.test(trimmedValue)) return false;
+    // Проверка на два слова, разделенных пробелом
+    const words = trimmedValue.split(/\s+/);
+    if (words.length !== 2) return false;
+    // Проверка, что оба слова состоят только из латинских букв
+    const latinLettersOnly = /^[a-zA-Z]+$/;
+    return words.every((word)=>latinLettersOnly.test(word));
+}
+function validateCardNumber(value) {
+    if (!value || typeof value !== 'string') return false;
+    // Убираем пробелы для проверки
+    const digitsOnly = value.replace(/\s/g, '');
+    // Проверка на наличие нецифровых символов
+    if (!/^\d+$/.test(digitsOnly)) return false;
+    // Проверка длины (стандартные карты: 13-16 цифр)
+    const length = digitsOnly.length;
+    return length >= 13 && length <= 16;
+}
+function validateCVV(value) {
+    if (!value || typeof value !== 'string') return false;
+    const trimmedValue = value.trim();
+    // Проверка на точную длину 3 символа
+    if (trimmedValue.length !== 3) return false;
+    // Проверка, что все символы - цифры
+    return /^\d{3}$/.test(trimmedValue);
+}
+function validateCardDate(value) {
+    if (!value || typeof value !== 'string') return false;
+    // Формат MM/YY
+    const datePattern = /^(0[1-9]|1[0-2])\/\d{2}$/;
+    return datePattern.test(value);
+}
+function validateForm(cardHolder, cardNumber, cardDate, cvv) {
+    return {
+        cardHolder: validateCardHolder(cardHolder),
+        cardNumber: validateCardNumber(cardNumber),
+        cardDate: validateCardDate(cardDate),
+        cvv: validateCVV(cvv),
+        isValid: function() {
+            return this.cardHolder && this.cardNumber && this.cardDate && this.cvv;
+        }
+    };
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fovxO","83FZ8"], "83FZ8", "parcelRequire94c2")
 
 //# sourceMappingURL=index.09abd0a0.js.map
